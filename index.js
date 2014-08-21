@@ -8,7 +8,10 @@ var https = require('https');
 var path = require('path');
 var Q = require('q');
 var swig = require('swig');
+var morgan = require('morgan');
 
+var port = process.env.PORT || 443;
+var host = process.env.HOST || 'site.dev-coursera.org';
 var homeDir = path.resolve(path.join(process.env.HOME, 'base/coursera/site'));
 
 hosts.writeCourserHost();
@@ -31,6 +34,7 @@ var router = express.Router();
 
 var staticFolder = path.join(homeDir, 'app/www/static.crane');
 
+app.use(morgan('combined'));
 app.engine('html', swig.renderFile);
 app.set('views', staticFolder)
 app.set('view cache', false);
@@ -75,22 +79,11 @@ var credentials = {
   cert: certificate
 };
 
-https.createServer(credentials, app)
-  .listen(443, 'site.dev-coursera.org');
+https.createServer(credentials, app).listen(port, host, function() {
+  console.log('Listening on ' + host + ':' + port);
+});
 
 process.on('SIGINT', function() {
   hosts.writeBackHost();
   process.exit(0);
 });
-
-
-
-
-
-
-
-
-
-
-
-
