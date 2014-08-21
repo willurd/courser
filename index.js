@@ -9,6 +9,8 @@ var path = require('path');
 var Q = require('q');
 var swig = require('swig');
 
+var homeDir = path.resolve(path.join(process.env.HOME, 'base/coursera/site'));
+
 hosts.writeCourserHost();
 
 var unescape = function(input) {
@@ -27,7 +29,7 @@ swig.setDefaults({
 var app = express();
 var router = express.Router();
 
-var staticFolder = path.join(__dirname, '../../site/app/www/static.crane');
+var staticFolder = path.join(homeDir, 'app/www/static.crane');
 
 app.engine('html', swig.renderFile);
 app.set('views', staticFolder)
@@ -60,13 +62,13 @@ app.use(bodyParser.json({
 }))
 
 app.use('/', router);
-app.use('/static', express.static('../../site/app/www/static.crane'))
+app.use('/static', express.static(path.join(homeDir, 'app/www/static.crane')));
 
 http.createServer(app)
   .listen(80, 'site.dev-coursera.org')
 
-var privateKey = fs.readFileSync('../../site/setup/conf/ssl.dev-coursera.key', 'utf8');
-var certificate = fs.readFileSync('../../site/setup/conf/ssl.dev-coursera.crt', 'utf8');
+var privateKey = fs.readFileSync(path.join(homeDir, 'setup/conf/ssl.dev-coursera.key'), 'utf8');
+var certificate = fs.readFileSync(path.join(homeDir, 'setup/conf/ssl.dev-coursera.crt'), 'utf8');
 
 var credentials = {
   key: privateKey,
