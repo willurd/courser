@@ -9,7 +9,9 @@
   "author": "Jon Wong",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.8.5"
+    "express": "^4.8.5",
+    "http": "0.0.0",
+    "vhost": "^2.0.0"
   },
   "devDependencies": {
     "body-parser": "^1.6.5",

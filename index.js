@@ -2,6 +2,8 @@ var _ = require('underscore');
 var bodyParser = require('body-parser');
 var express = require('express');
 var fs = require('fs');
+var http = require('http');
+var https = require('https');
 var path = require('path');
 var Q = require('q');
 var swig = require('swig');
@@ -34,7 +36,6 @@ router.use('/learn/:courseSlug', function(request, response) {
 });
 
 router.post(/^\/api/, function(request, response) {
-  console.log(request.body)
   response.send();
 });
 
@@ -49,4 +50,18 @@ app.use(bodyParser.json({ type: 'application/vnd.api+json' }))
 
 app.use('/', router);
 app.use('/static', express.static('../../site/app/www/static.crane'))
-app.listen(3000);
+
+http.createServer(app)
+  .listen(80, 'site.dev-coursera.org')
+
+var privateKey  = fs.readFileSync('../../site/setup/conf/ssl.dev-coursera.key', 'utf8');
+var certificate = fs.readFileSync('../../site/setup/conf/ssl.dev-coursera.crt', 'utf8');
+
+var credentials = {
+  key: privateKey,
+  cert: certificate
+};
+
+https.createServer(credentials, app)
+  .listen(443, 'site.dev-coursera.org');
+
