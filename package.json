@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.8.5",
+    "hostile": "^0.6.0",
     "http": "0.0.0",
     "vhost": "^2.0.0"
   },
